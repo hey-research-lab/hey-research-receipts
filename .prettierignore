@@ -1,0 +1,15 @@
+dist/
+coverage/
+node_modules/
+pnpm-lock.yaml
+# Byte parity with HEY production: the published JSON Schema exactly as served, and the
+# extracted modules exactly as written there (see CONTRIBUTING.md, "Parity").
+schema/agent-research-receipt.v1.json
+src/schema.ts
+src/examples.ts
+src/evidence-ids.ts
+# Verbatim from the ecosystem conventions (identical in every repo).
+src/chain.ts
+scripts/scan.mjs
+# Test data, byte-stable (and some of it deliberately not valid JSON).
+fixtures/

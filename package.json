@@ -1,0 +1,85 @@
+{
+  "name": "@hey-research-lab/research-receipts",
+  "version": "0.1.0",
+  "description": "Specification, JSON Schema and stateless validator for AgentResearchReceipt v1: what an agent cited and concluded about a Robinhood Chain project.",
+  "license": "MIT",
+  "author": "HEY Research Lab",
+  "type": "module",
+  "sideEffects": false,
+  "homepage": "https://heyresearch.xyz/developers",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hey-research-lab/hey-research-receipts.git"
+  },
+  "bugs": {
+    "url": "https://github.com/hey-research-lab/hey-research-receipts/issues"
+  },
+  "keywords": [
+    "hey-research",
+    "robinhood-chain",
+    "ai-agents",
+    "json-schema",
+    "provenance",
+    "research-receipt",
+    "zod",
+    "developer-tools"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./schema/agent-research-receipt.v1.json": "./schema/agent-research-receipt.v1.json",
+    "./package.json": "./package.json"
+  },
+  "bin": {
+    "hey-receipt": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "schema",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "packageManager": "pnpm@9.15.1",
+  "scripts": {
+    "build": "tsup",
+    "lint": "eslint .",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "scan": "node scripts/scan.mjs .",
+    "format:check": "prettier --check .",
+    "format": "prettier --write ."
+  },
+  "dependencies": {
+    "zod": "^3.24.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.17.0",
+    "@types/node": "^22.10.0",
+    "ajv": "8.20.0",
+    "eslint": "^9.17.0",
+    "eslint-config-prettier": "^9.1.0",
+    "prettier": "^3.4.2",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.18.0",
+    "vitest": "^2.1.8"
+  }
+}
