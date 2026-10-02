@@ -91,8 +91,23 @@ function onlineExit(result: OnlineResult): number {
   }
 }
 
-function printOffline(label: string, offline: OfflineValidation, out: string[]): void {
-  out.push(`${offline.valid ? 'VALID' : 'INVALID'}  ${label} — AgentResearchReceipt v1`);
+/** The headline answers the whole run: an online check that does not confirm the receipt overrides the offline VALID. */
+function headline(offline: OfflineValidation, online: OnlineResult | null, exit: number): string {
+  if (!offline.valid) return 'INVALID';
+  if (online === null) return 'VALID';
+  if (!online.ok) return 'VALID (offline only; HEY check not completed)';
+  return exit === EXIT.ok
+    ? 'VALID (confirmed by HEY)'
+    : 'NOT CONFIRMED (valid offline; HEY does not confirm it)';
+}
+
+function printOffline(
+  label: string,
+  offline: OfflineValidation,
+  out: string[],
+  head = offline.valid ? 'VALID' : 'INVALID',
+): void {
+  out.push(`${head}  ${label} — AgentResearchReceipt v1`);
   if (offline.shapeValid) out.push('  shape: valid against the v1 schema');
   if (offline.subject) {
     const chain =
@@ -381,7 +396,12 @@ export async function run(argv: readonly string[], io: CliIo): Promise<number> {
     return exit;
   }
   const out: string[] = [];
-  printOffline(label, offline, out);
+  printOffline(
+    label,
+    offline,
+    out,
+    headline(offline, online && !('skipped' in online) ? online : null, exit),
+  );
   if (online && 'skipped' in online)
     out.push('  HEY check: skipped — the receipt is invalid offline, so it was not sent.');
   else if (online) printOnline(online, out);

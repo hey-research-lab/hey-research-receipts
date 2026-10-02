@@ -32,7 +32,7 @@ describe('checkReceiptOnline', () => {
     expect(init?.body).toBe(BODY);
     const headers = init?.headers as Record<string, string>;
     expect(Object.keys(headers).sort()).toEqual(['accept', 'content-type', 'user-agent']);
-    expect(headers['user-agent']).toBe('@hey-research-lab/research-receipts/0.1.0');
+    expect(headers['user-agent']).toBe('@hey-research-lab/research-receipts/0.1.1');
   });
 
   it('keeps HEY’s answer, additive fields included', async () => {

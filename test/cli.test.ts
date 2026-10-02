@@ -133,6 +133,7 @@ describe('hey-receipt validate --online', () => {
     expect(r.stdout).toContain('as_of_not_verified');
     expect(r.stdout).toContain('HEY evidence stands: yes');
     expect(r.stdout).toContain('endorsement: false');
+    expect(r.stdout.split('\n')[0]).toMatch(/^VALID \(confirmed by HEY\)/);
   });
 
   it('exits 1 when HEY says a cited id does not stand', async () => {
@@ -141,6 +142,8 @@ describe('hey-receipt validate --online', () => {
     });
     expect(r.code).toBe(EXIT.invalid);
     expect(r.stdout).toContain('withdrawn:retracted');
+    // The headline answers the whole run, never a bare offline VALID.
+    expect(r.stdout.split('\n')[0]).toMatch(/^NOT CONFIRMED /);
   });
 
   it('does not send a receipt that is invalid offline', async () => {
@@ -171,6 +174,7 @@ describe('hey-receipt validate --online', () => {
       fetchImpl: answering(429, fixture('online/error-rate-limited.json')),
     });
     expect(r.stdout).toContain('retry after: 42 s');
+    expect(r.stdout.split('\n')[0]).toMatch(/^VALID \(offline only; HEY check not completed\)/);
   });
 });
 
@@ -265,7 +269,7 @@ describe('hey-receipt usage', () => {
   });
 
   it('prints the version', async () => {
-    expect((await cli(['--version'])).stdout).toBe('0.1.0\n');
+    expect((await cli(['--version'])).stdout).toBe('0.1.1\n');
   });
 
   it('refuses to follow a symbolic link', async () => {

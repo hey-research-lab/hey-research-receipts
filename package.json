@@ -1,6 +1,6 @@
 {
   "name": "@hey-research-lab/research-receipts",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Specification, JSON Schema and stateless validator for AgentResearchReceipt v1: what an agent cited and concluded about a Robinhood Chain project.",
   "license": "MIT",
   "author": "HEY Research Lab",

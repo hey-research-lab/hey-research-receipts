@@ -4,6 +4,11 @@ All notable changes to this package are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the package uses
 [Semantic Versioning](https://semver.org/). Schema versions are independent of package versions.
 
+## 0.1.1 — 2026-10-02
+
+- `hey-receipt validate --online`: the headline answers the whole run. A receipt HEY does not confirm reads `NOT CONFIRMED (valid offline; HEY does not confirm it)` instead of `VALID`; a confirmed one `VALID (confirmed by HEY)`; an unfinished check `VALID (offline only; HEY check not completed)`. Exit codes are unchanged.
+- Issue templates (bug, idea) with private security reporting and HEY corrections linked.
+
 ## 0.1.0 — 2026-10-02
 
 Initial release.
