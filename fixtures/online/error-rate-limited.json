@@ -1,0 +1,7 @@
+{
+  "error": "rate_limited",
+  "message": "Too many requests. Try again shortly.",
+  "requestId": "00000000-0000-4000-8000-000000000001",
+  "retryable": true,
+  "retryAfterSeconds": 42
+}

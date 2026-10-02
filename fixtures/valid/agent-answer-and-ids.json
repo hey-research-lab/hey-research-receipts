@@ -1,0 +1,124 @@
+{
+  "$schema": "https://heyresearch.xyz/schemas/agent-research-receipt.v1.json",
+  "type": "AgentResearchReceipt",
+  "version": "1.0",
+  "agentId": "https://agent.example.org/contract-watcher",
+  "mandate": "Record the contract history of Robinhood Chain projects; no allocation authority.",
+  "subjectType": "contract",
+  "subject": {
+    "chainId": 4663,
+    "projectSlug": "example-project",
+    "contract": "0x0000000000000000000000000000000000000002"
+  },
+  "createdAt": "2026-10-01T09:00:00Z",
+  "evidenceCutoff": "2026-10-01T08:55:00.000Z",
+  "thesisSummary": "The contract was upgraded once and its hook permissions are recorded; usage was not measured, so nothing is concluded about it.",
+  "claims": [
+    {
+      "statement": "HEY's agent answer lists the project's activity status under its published rule.",
+      "kind": "DERIVED",
+      "evidence": [
+        {
+          "kind": "hey_agent_answer",
+          "capability": "research_project",
+          "schemaVersion": "1",
+          "url": "https://heyresearch.xyz/api/agent/research_project?project=example-project",
+          "asOf": "2026-10-01T08:50:00.000Z",
+          "project": "example-project",
+          "scoringVersion": "hbm-v21"
+        }
+      ]
+    },
+    {
+      "statement": "An implementation change was read from the chain's upgrade log.",
+      "kind": "FACT",
+      "evidence": [
+        {
+          "kind": "hey_evidence",
+          "id": "impl:4663:0x0000000000000000000000000000000000000002:1234567:3"
+        }
+      ]
+    },
+    {
+      "statement": "A Uniswap v4 hook contract is attributed to the project.",
+      "kind": "FACT",
+      "evidence": [
+        {
+          "kind": "hey_evidence",
+          "id": "v4hook:4663:0x0000000000000000000000000000000000000002"
+        }
+      ]
+    },
+    {
+      "statement": "The project publishes a security contact.",
+      "kind": "FACT",
+      "evidence": [
+        {
+          "kind": "hey_evidence",
+          "id": "security:0b1c2d3e-4f5a-4b6c-8d7e-9f0a1b2c3d4e:contact:0123456789abcdef",
+          "note": "Evidence that a contact is published, not a verdict."
+        }
+      ]
+    },
+    {
+      "statement": "HEY recorded an activity-status transition.",
+      "kind": "FACT",
+      "evidence": [
+        {
+          "kind": "hey_evidence",
+          "id": "state:0b1c2d3e-4f5a-4b6c-8d7e-9f0a1b2c3d4e:activity_status:42"
+        },
+        {
+          "kind": "hey_change_event",
+          "id": "state:0b1c2d3e-4f5a-4b6c-8d7e-9f0a1b2c3d4e:activity_status:42",
+          "revision": 1
+        }
+      ]
+    },
+    {
+      "statement": "A source was added to the project's record.",
+      "kind": "FACT",
+      "evidence": [
+        {
+          "kind": "hey_change_event",
+          "id": "source:3f1c2b1e-4d5a-4c6b-8e7f-9a0b1c2d3e4f:added",
+          "revision": 2
+        }
+      ]
+    },
+    {
+      "statement": "Nothing here says whether the contract is used.",
+      "kind": "JUDGEMENT"
+    }
+  ],
+  "risks": [],
+  "unknowns": [
+    {
+      "statement": "Usage of the contract is not measured by HEY.",
+      "coverageDimension": "usage",
+      "category": "NOT_MEASURED"
+    },
+    {
+      "statement": "The newest market reading is older than its freshness limit.",
+      "category": "STALE"
+    }
+  ],
+  "researchState": {
+    "value": "RECORDED",
+    "definition": "The contract history is written down; no view is taken."
+  },
+  "confidence": null,
+  "reviewConditions": [
+    {
+      "condition": "Another implementation change.",
+      "watch": "GET /api/changes?contract=0x0000000000000000000000000000000000000002"
+    }
+  ],
+  "sourceSystems": [
+    {
+      "name": "HEY Research Lab",
+      "url": "https://heyresearch.xyz",
+      "apiVersion": "1"
+    }
+  ]
+}

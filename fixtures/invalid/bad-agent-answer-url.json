@@ -1,0 +1,61 @@
+{
+  "$schema": "https://heyresearch.xyz/schemas/agent-research-receipt.v1.json",
+  "type": "AgentResearchReceipt",
+  "version": "1.0",
+  "agentId": "https://agent.example.org/contract-watcher",
+  "mandate": "Record the contract history of Robinhood Chain projects; no allocation authority.",
+  "subjectType": "contract",
+  "subject": {
+    "chainId": 4663,
+    "projectSlug": "example-project",
+    "contract": "0x0000000000000000000000000000000000000002"
+  },
+  "createdAt": "2026-10-01T09:00:00Z",
+  "evidenceCutoff": "2026-10-01T08:55:00.000Z",
+  "thesisSummary": "The contract was upgraded once and its hook permissions are recorded; usage was not measured, so nothing is concluded about it.",
+  "claims": [
+    {
+      "statement": "An answer cited from another origin.",
+      "kind": "DERIVED",
+      "evidence": [
+        {
+          "kind": "hey_agent_answer",
+          "capability": "research_project",
+          "schemaVersion": "1",
+          "url": "https://heyresearch.example.org/api/agent/research_project?project=example-project",
+          "asOf": "2026-10-01T08:50:00Z"
+        }
+      ]
+    }
+  ],
+  "risks": [],
+  "unknowns": [
+    {
+      "statement": "Usage of the contract is not measured by HEY.",
+      "coverageDimension": "usage",
+      "category": "NOT_MEASURED"
+    },
+    {
+      "statement": "The newest market reading is older than its freshness limit.",
+      "category": "STALE"
+    }
+  ],
+  "researchState": {
+    "value": "RECORDED",
+    "definition": "The contract history is written down; no view is taken."
+  },
+  "confidence": null,
+  "reviewConditions": [
+    {
+      "condition": "Another implementation change.",
+      "watch": "GET /api/changes?contract=0x0000000000000000000000000000000000000002"
+    }
+  ],
+  "sourceSystems": [
+    {
+      "name": "HEY Research Lab",
+      "url": "https://heyresearch.xyz",
+      "apiVersion": "1"
+    }
+  ]
+}

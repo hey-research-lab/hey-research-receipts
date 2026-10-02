@@ -1,0 +1,87 @@
+{
+  "type": "AgentResearchReceipt",
+  "version": "1.0",
+  "agentId": "did:web:agent.example.org",
+  "mandate": "Assess research-infrastructure tokens on Robinhood Chain; may propose, never execute, an allocation.",
+  "subjectType": "token",
+  "subject": {
+    "chainId": 4663,
+    "projectSlug": "hey-research-lab",
+    "tokenContract": "0x0000000000000000000000000000000000000001"
+  },
+  "createdAt": "2026-09-28T12:30:00Z",
+  "evidenceCutoff": "2026-09-28T12:25:00Z",
+  "thesisSummary": "HEY's own project shows recent ships and a hosted MCP in use; of its documented token utilities some are LIVE and others PLANNED per /api/hey/profile, and the valuation reading is an FDV, not a market cap.",
+  "claims": [
+    {
+      "statement": "The profile lists Request Research as LIVE on this deployment.",
+      "kind": "FACT",
+      "evidence": [
+        {
+          "kind": "external",
+          "url": "https://heyresearch.xyz/api/hey/profile",
+          "retrievedAt": "2026-09-28T12:25:00Z"
+        }
+      ]
+    },
+    {
+      "statement": "HEY recorded a release for its own project this week.",
+      "kind": "FACT",
+      "evidence": [
+        {
+          "kind": "hey_change_event",
+          "id": "ship:0b1c2d3e-4f5a-4b6c-8d7e-9f0a1b2c3d4e",
+          "revision": 1
+        }
+      ]
+    },
+    {
+      "statement": "Planned utilities are not counted as value by this agent.",
+      "kind": "JUDGEMENT",
+      "evidence": []
+    }
+  ],
+  "risks": [
+    {
+      "statement": "The valuation HEY holds is FDV; circulating supply differs.",
+      "evidence": [
+        {
+          "kind": "market_observation",
+          "source": "dexscreener",
+          "observedAt": "2026-09-28T12:00:00Z",
+          "field": "fdv"
+        }
+      ]
+    },
+    {
+      "statement": "Liquidity depth is modest relative to this agent's minimum."
+    }
+  ],
+  "unknowns": [
+    {
+      "statement": "Whether the monthly treasury ledger has been published is not checked by the profile."
+    }
+  ],
+  "researchState": {
+    "value": "RESEARCH_MORE",
+    "definition": "Evidence is mixed or incomplete for this agent's mandate."
+  },
+  "outcome": {
+    "value": "RESEARCH_MORE",
+    "decidedBy": "agent",
+    "definition": "Collect another month of evidence before any proposal."
+  },
+  "confidence": null,
+  "reviewConditions": [
+    {
+      "condition": "The first monthly treasury ledger entry, or a utility moving from PLANNED to LIVE.",
+      "watch": "GET /api/hey/profile"
+    }
+  ],
+  "sourceSystems": [
+    {
+      "name": "x",
+      "url": "http://example.com"
+    }
+  ]
+}

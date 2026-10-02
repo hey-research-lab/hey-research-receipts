@@ -1,0 +1,39 @@
+{
+  "schema": "hey.agent-research-receipt/v1",
+  "valid": true,
+  "errors": [],
+  "subject": {
+    "chainId": 4663,
+    "projectSlug": "hoodlock",
+    "status": "exists"
+  },
+  "evidence": {
+    "total": 3,
+    "heyChecked": 2,
+    "results": [
+      {
+        "kind": "hey_evidence",
+        "ref": "ship:3f1c2b1e-4d5a-4c6b-8e7f-9a0b1c2d3e4f",
+        "status": "withdrawn",
+        "reason": "withdrawn:retracted"
+      },
+      {
+        "kind": "hey_snapshot",
+        "ref": "hoodlock",
+        "status": "project_exists",
+        "reason": "as_of_not_verified",
+        "scoringVersion": "differs_from_current"
+      },
+      {
+        "kind": "market_observation",
+        "ref": "geckoterminal",
+        "status": "not_checked",
+        "reason": "not_a_hey_id"
+      }
+    ]
+  },
+  "heyEvidenceStands": false,
+  "stored": false,
+  "endorsement": false,
+  "note": "HEY checked the receipt's shape and whether the HEY ids it cites exist on HEY's public record. It did not evaluate, store or endorse the conclusion, and it fetched nothing the receipt names."
+}
