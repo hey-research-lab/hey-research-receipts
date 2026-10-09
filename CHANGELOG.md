@@ -4,6 +4,10 @@ All notable changes to this package are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the package uses
 [Semantic Versioning](https://semver.org/). Schema versions are independent of package versions.
 
+## Unreleased
+
+- Development: vitest 4.1.11 / tsup 8.5.1, with esbuild held at ^0.28.1 by a pnpm override; clears dev-only advisories in the test and build toolchain. No runtime change.
+
 ## 0.1.1 — 2026-10-02
 
 - `hey-receipt validate --online`: the headline answers the whole run. A receipt HEY does not confirm reads `NOT CONFIRMED (valid offline; HEY does not confirm it)` instead of `VALID`; a confirmed one `VALID (confirmed by HEY)`; an unfinished check `VALID (offline only; HEY check not completed)`. Exit codes are unchanged.
