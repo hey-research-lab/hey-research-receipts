@@ -30,8 +30,8 @@ Never commit secrets, `.env` files with values, or anything a test fetched live.
 
 ## Parity (maintainers)
 
-The contract files were extracted from HEY Research Lab's production contract at commit
-`21775391f6c0fb4494575e0b4463df535c65cb96` (2026-10-02):
+The contract files were extracted from HEY Research Lab's production contract as of 2026-10-02
+(its public mirror is [hey-research-open](https://github.com/hey-research-lab/hey-research-open)):
 
 | File here                               | Production source                                                                             | Relation                                                                                                                                                                                    |
 | --------------------------------------- | --------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
