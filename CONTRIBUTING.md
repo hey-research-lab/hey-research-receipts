@@ -45,6 +45,11 @@ Production sha256 at that commit: schema module
 `3915f74b08f84be07cb3d7b30720ebed45ebc93d752c25e0c2e62b4d9af5cd27`; evidence-id excerpt
 (lines 4–188) `97a544d35fda3cb2b8fde5496733ab8475402668fdcef1ac03058de89ae0e736`.
 
+Re-checked against production as of 2026-10-09: the schema module, the examples module, the
+evidence-id excerpt and the published JSON Schema all still have the hashes above, and production's
+validator (`POST /api/receipts/validate`) is unchanged, so 0.1.1 matches production and needs no
+release.
+
 To re-check against a newer production commit, a maintainer with access diffs the three modules
 and re-reads the published JSON Schema once; `pnpm test` then proves the generator, the Zod
 schema and the published file still agree. These files are excluded from Prettier so their bytes
