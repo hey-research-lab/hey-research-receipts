@@ -245,7 +245,7 @@ export function validateReceipt(value: unknown): OfflineValidation {
   if (!parsed.success) {
     const errors: Finding[] = parsed.error.issues.slice(0, MAX_ERRORS).map((issue) => ({
       code: 'invalid_shape',
-      path: pathOf(issue.path),
+      path: pathOf(issue.path.map((part) => (typeof part === 'symbol' ? String(part) : part))),
       message: issue.message,
     }));
     // The chain rule is reported even when the shape fails, when the chain id can be read.

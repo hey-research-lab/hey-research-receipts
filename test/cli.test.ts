@@ -269,7 +269,7 @@ describe('hey-receipt usage', () => {
   });
 
   it('prints the version', async () => {
-    expect((await cli(['--version'])).stdout).toBe('0.1.1\n');
+    expect((await cli(['--version'])).stdout).toBe('0.2.0\n');
   });
 
   it('refuses to follow a symbolic link', async () => {

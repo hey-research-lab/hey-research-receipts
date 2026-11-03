@@ -39,6 +39,43 @@ describe('the published JSON Schema', () => {
 
 /* ------------------------------------------------ zod ⇄ JSON Schema structure */
 
+type Bag = {
+  minimum?: number;
+  maximum?: number;
+  exclusiveMinimum?: number;
+  integer: boolean;
+  patterns: string[];
+};
+
+type CheckDef = {
+  check: string;
+  minimum?: number;
+  maximum?: number;
+  value?: number;
+  inclusive?: boolean;
+  format?: string;
+  pattern?: RegExp;
+};
+
+/** Reads zod 4's check definitions (min/max length, bounds, int, patterns) off a schema. */
+const bagOf = (t: ZodTypeAny): Bag => {
+  const bag: Bag = { integer: false, patterns: [] };
+  const checks = (t._zod.def as { checks?: { _zod: { def: CheckDef } }[] }).checks ?? [];
+  for (const { _zod } of checks) {
+    const def = _zod.def;
+    if (def.check === 'min_length') bag.minimum = def.minimum;
+    else if (def.check === 'max_length') bag.maximum = def.maximum;
+    else if (def.check === 'number_format' && def.format === 'safeint') bag.integer = true;
+    else if (def.check === 'string_format' && def.format === 'regex' && def.pattern)
+      bag.patterns.push(def.pattern.source);
+    else if (def.check === 'greater_than') {
+      if (def.inclusive) bag.minimum = def.value;
+      else bag.exclusiveMinimum = def.value;
+    } else if (def.check === 'less_than' && def.inclusive) bag.maximum = def.value;
+  }
+  return bag;
+};
+
 const unwrap = (t: ZodTypeAny): { type: ZodTypeAny; optional: boolean; nullable: boolean } => {
   let optional = false;
   let nullable = false;
@@ -49,12 +86,10 @@ const unwrap = (t: ZodTypeAny): { type: ZodTypeAny; optional: boolean; nullable:
       cur = cur.unwrap() as ZodTypeAny;
     } else if (cur instanceof z.ZodDefault) {
       optional = true;
-      cur = cur._def.innerType as ZodTypeAny;
+      cur = cur.unwrap() as ZodTypeAny;
     } else if (cur instanceof z.ZodNullable) {
       nullable = true;
       cur = cur.unwrap() as ZodTypeAny;
-    } else if (cur instanceof z.ZodEffects) {
-      cur = cur.innerType() as ZodTypeAny;
     } else return { type: cur, optional, nullable };
   }
 };
@@ -68,6 +103,7 @@ function compare(zodType: ZodTypeAny, js: Json, path: string, problems: string[]
     if (js.type !== 'object') at(`expected type object, got ${String(js.type)}`);
     if (js.additionalProperties !== false)
       at('expected additionalProperties: false (zod .strict())');
+    if (!(type._zod.def.catchall instanceof z.ZodNever)) at('zod object is not .strict()');
     const shape = type.shape as Record<string, ZodTypeAny>;
     const props = (js.properties ?? {}) as Record<string, Json>;
     const zodKeys = Object.keys(shape).sort();
@@ -84,14 +120,11 @@ function compare(zodType: ZodTypeAny, js: Json, path: string, problems: string[]
   }
   if (type instanceof z.ZodArray) {
     if (js.type !== 'array') at(`expected type array, got ${String(js.type)}`);
-    const def = type._def as {
-      minLength: { value: number } | null;
-      maxLength: { value: number } | null;
-    };
-    if ((def.minLength?.value ?? undefined) !== js.minItems)
-      at(`minItems zod ${def.minLength?.value} vs json ${String(js.minItems)}`);
-    if ((def.maxLength?.value ?? undefined) !== js.maxItems)
-      at(`maxItems zod ${def.maxLength?.value} vs json ${String(js.maxItems)}`);
+    const bag = bagOf(type);
+    if (bag.minimum !== js.minItems)
+      at(`minItems zod ${bag.minimum} vs json ${String(js.minItems)}`);
+    if (bag.maximum !== js.maxItems)
+      at(`maxItems zod ${bag.maximum} vs json ${String(js.maxItems)}`);
     compare(type.element as ZodTypeAny, js.items as Json, `${path}[]`, problems);
     return;
   }
@@ -121,34 +154,30 @@ function compare(zodType: ZodTypeAny, js: Json, path: string, problems: string[]
   }
   if (type instanceof z.ZodString) {
     if (js.type !== 'string') at(`expected type string, got ${String(js.type)}`);
-    for (const check of type._def.checks) {
-      if (check.kind === 'min' && js.minLength !== check.value)
-        at(`minLength zod ${check.value} vs json ${String(js.minLength)}`);
-      if (check.kind === 'max' && js.maxLength !== check.value)
-        at(`maxLength zod ${check.value} vs json ${String(js.maxLength)}`);
-      if (check.kind === 'regex' && js.pattern !== check.regex.source)
-        at(`pattern zod ${check.regex.source} vs json ${String(js.pattern)}`);
-    }
+    const bag = bagOf(type);
+    if (bag.minimum !== js.minLength)
+      at(`minLength zod ${bag.minimum} vs json ${String(js.minLength)}`);
+    if (bag.maximum !== js.maxLength)
+      at(`maxLength zod ${bag.maximum} vs json ${String(js.maxLength)}`);
+    const patterns = bag.patterns;
+    const jsPatterns = js.pattern === undefined ? [] : [js.pattern];
+    if (JSON.stringify(patterns) !== JSON.stringify(jsPatterns))
+      at(`pattern zod ${patterns} vs json ${String(js.pattern)}`);
     return;
   }
   if (type instanceof z.ZodNumber) {
-    const integer = type._def.checks.some((c) => c.kind === 'int');
+    const bag = bagOf(type);
+    const integer = bag.integer;
     const expected = integer ? 'integer' : 'number';
     const jsType = Array.isArray(js.type) ? js.type : [js.type];
     if (!jsType.includes(expected)) at(`expected type ${expected}, got ${String(js.type)}`);
     if (nullable && !jsType.includes('null'))
       at('zod is nullable, JSON Schema does not allow null');
-    for (const check of type._def.checks) {
-      if (
-        check.kind === 'min' &&
-        js.minimum !== check.value &&
-        !(check.value === 0 && !check.inclusive && js.minimum === 1)
-      ) {
-        at(`minimum zod ${check.value} vs json ${String(js.minimum)}`);
-      }
-      if (check.kind === 'max' && js.maximum !== check.value)
-        at(`maximum zod ${check.value} vs json ${String(js.maximum)}`);
-    }
+    const { minimum, maximum } = bag;
+    const positiveInteger = integer && bag.exclusiveMinimum === 0 && js.minimum === 1;
+    if (!positiveInteger && minimum !== js.minimum)
+      at(`minimum zod ${minimum} vs json ${String(js.minimum)}`);
+    if (maximum !== js.maximum) at(`maximum zod ${maximum} vs json ${String(js.maximum)}`);
     return;
   }
   at(`unhandled zod type ${type.constructor.name}`);
