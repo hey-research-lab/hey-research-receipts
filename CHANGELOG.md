@@ -4,7 +4,7 @@ All notable changes to this package are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and the package uses
 [Semantic Versioning](https://semver.org/). Schema versions are independent of package versions.
 
-## 0.2.0 — unreleased (not yet on npm)
+## 0.2.0 — 2026-11-03
 
 - Security: `zod` moves from `^3.24.1` to `^4.6.7` (GHSA-mrhx-c7xc-m3w5, memory exhaustion on large arrays, fixed only in 4.6.6). `agentResearchReceiptSchema` is a zod 4 schema now, hence the minor bump. The receipt schema (v1.0), the published JSON Schema and every verdict are unchanged; the parity test reads zod 4's check definitions.
 - Development: vitest 4.1.12.
