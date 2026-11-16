@@ -187,6 +187,8 @@ makes no network calls. Inputs are capped at 64 KB before parsing; `__proto__`, 
 regular file (never through a symbolic link) or stdin. The only network call is the opt-in
 `--online` POST to the fixed HEY URL above. No credentials are needed or sent.
 
+HEY Research Lab also reviews other projects' code and reports what it finds privately first: [security credits](https://github.com/hey-research-lab#security-credits).
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md). `pnpm install`, then `pnpm lint`, `pnpm typecheck`,
